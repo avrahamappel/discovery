@@ -52,8 +52,9 @@ fn main() -> ! {
         UartePort::new(serial)
     };
 
-    writeln!(serial, "The quick brown fox jumps over the lazy dog.").unwrap();
-    nb::block!(serial.flush()).unwrap();
-
-    loop {}
+    loop {
+        let byte = nb::block!(serial.read()).unwrap();
+        nb::block!(serial.write(byte)).unwrap();
+        nb::block!(serial.flush()).unwrap();
+    }
 }
